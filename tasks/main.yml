@@ -1,0 +1,36 @@
+---
+- name: Ensure directory exists
+  file:
+    path: "{{ backups_role_path }}"
+    state: directory
+    owner: "{{ backups_role_user }}"
+    group: "{{ backups_role_group }}"
+    mode: 0775
+
+- name: Copy backup script
+  template:
+    src: backups.sh.j2
+    dest: "{{ backups_role_path }}/backups.sh"
+    owner: "{{ backups_role_user }}"
+    group: "{{ backups_role_group }}"
+    mode: 0775
+
+- name: Install restic and configure restic repository
+  vars:
+    restic_version: "{{ backups_role_restic_version }}"
+    restic_repos:
+      - name: "{{ backups_role_restic_repo_name }}"
+        url: "{{ backups_role_bucket_url }}"
+        password: "{{ backups_role_restic_password }}"
+        remote_credentials:
+          b2_account_id: "{{ backups_role_b2_account_id }}"
+          b2_account_key: "{{ backups_role_b2_account_key }}"
+    jobs:
+      - command: "{{ backups_role_path }}/backups.sh && restic backup {{ backups_role_path }}/pg_dump {{ backups_role_path }}/config.tar.gz {{ backups_role_assets_paths|join(' ') }}"
+        at: "{{ backups_role_cron_job_at }}"
+        user: "{{ backups_role_user }}"
+      - command: 'restic forget --keep-last 5 --prune'
+        at: '5 11 */5 * *'
+        user: "{{ backups_role_user }}"
+  include_role:
+    name: vendor/paulfantom.restic

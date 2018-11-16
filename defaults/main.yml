@@ -1,0 +1,7 @@
+---
+# defaults file for backups-role
+backups_role_restic_version: '0.9.3'
+backups_role_path: '/opt/backups'
+backups_role_config_paths: []
+backups_role_assets_paths: []
+backups_role_cron_job_at: '5 10 * * *'
