@@ -26,11 +26,8 @@
           b2_account_id: "{{ backups_role_b2_account_id }}"
           b2_account_key: "{{ backups_role_b2_account_key }}"
     jobs:
-      - command: "{{ backups_role_path }}/backups.sh && restic backup {{ backups_role_path }}/pg_dump {{ backups_role_path }}/config.tar.gz {{ backups_role_assets_paths|join(' ') }}"
+      - command: "{{ backups_role_cmd_script }}"
         at: "{{ backups_role_cron_job_at }}"
-        user: "{{ backups_role_user }}"
-      - command: 'restic forget --keep-last 5 --prune'
-        at: '5 11 */5 * *'
         user: "{{ backups_role_user }}"
   include_role:
     name: vendor/paulfantom.restic
