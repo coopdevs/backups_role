@@ -9,11 +9,16 @@ backups_role_config_paths:
 backups_role_assets_paths: []
 backups_role_cron_job_at: '45 3 * * *'
 
+# Only used if in ansible to address different restic repos
+backups_role_restic_repo_name: "{{ ansible_hostname }}"
+
 # commands to execute in sequence
 backups_role_cmd_prepare_backup: "{{ backups_role_path }}/backups.sh"
 backups_role_cmd_restic_backup: "restic backup {{ backups_role_path }}/pg_dump {{ backups_role_path }}/config.tar.gz {{ backups_role_assets_paths|join(' ') }}"
 backups_role_cmd_restic_forget: "restic forget --keep-last 5 --prune"
 backups_role_cmd_restic_check: "restic check"
+
+# TODO Use this variable to save cron commands logs.
 backups_role_cmd_logfile: "/var/log/backups-cron.d/"
 
 backups_role_cmd_script: "{{ backups_role_cmd_prepare_backup }} && {{ backups_role_cmd_restic_backup }} && {{ backups_role_cmd_restic_forget }} && {{ backups_role_cmd_restic_check }} "
