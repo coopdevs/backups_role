@@ -15,7 +15,7 @@
     group: "{{ backups_role_group }}"
     mode: 0775
 
-- name: Ensure directory for backups temporary exists
+- name: Ensure directory for backups temporary data exists
   file:
     path: "{{ backups_role_last_backup_path }}"
     state: directory
