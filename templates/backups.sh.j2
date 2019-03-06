@@ -2,11 +2,11 @@
 
 # Backup git revision
 # pushd /home/git_repo/current
-# git rev-parse --verify HEAD > {{ backups_role_path }}/git_rev
+# git rev-parse --verify HEAD > {{ backups_role_last_backup_path }}/git_rev
 # popd
 
 # Postgres DB dump
-/usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_path }}/pg_dump
+sudo -u {{ backups_role_postgresql_user }} /usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_last_backup_path }}/pg_dump
 
 # Compress configuration files
-tar -zcvf {{ backups_role_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
+tar -zcvf {{ backups_role_last_backup_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}

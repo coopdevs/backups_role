@@ -1,7 +1,7 @@
 ---
-- name: Ensure directory exists
+- name: Ensure directory for backup script exists
   file:
-    path: "{{ backups_role_path }}"
+    path: "{{ backups_role_script_path }}"
     state: directory
     owner: "{{ backups_role_user }}"
     group: "{{ backups_role_group }}"
@@ -10,7 +10,15 @@
 - name: Copy backup script
   template:
     src: backups.sh.j2
-    dest: "{{ backups_role_path }}/backups.sh"
+    dest: "{{ backups_role_script_path }}/backups.sh"
+    owner: "{{ backups_role_user }}"
+    group: "{{ backups_role_group }}"
+    mode: 0775
+
+- name: Ensure directory for backups temporary exists
+  file:
+    path: "{{ backups_role_last_backup_path }}"
+    state: directory
     owner: "{{ backups_role_user }}"
     group: "{{ backups_role_group }}"
     mode: 0775
@@ -25,9 +33,9 @@
         remote_credentials:
           b2_account_id: "{{ backups_role_b2_account_id }}"
           b2_account_key: "{{ backups_role_b2_account_key }}"
-    jobs:
-      - command: "{{ backups_role_cmd_script }}"
-        at: "{{ backups_role_cron_job_at }}"
-        user: "{{ backups_role_user }}"
+        jobs:
+          - command: "{{ backups_role_cmd_script }}"
+            at: "{{ backups_role_cron_job_at }}"
+            user: "{{ backups_role_user }}"
   include_role:
     name: vendor/paulfantom.restic
