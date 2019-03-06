@@ -15,26 +15,26 @@ backups_role_postgresql_user: "postgres"
 
 # commands to execute in sequence
 backups_role_cmd_prepare_backup: >-
-  "echo \"## Prepare backup ##\" && 
-  {{ backups_role_script_path }}/backups.sh"
+  echo "## Prepare backup ##" && 
+  {{ backups_role_script_path }}/backups.sh
 backups_role_cmd_restic_backup: >-
-  "echo \"## Restic backup ##\"  && 
+  echo "## Restic backup ##"  && 
   restic backup
   {{ backups_role_last_backup_path }}/pg_dump
   {{ backups_role_last_backup_path }}/config.tar.gz
-  {{ backups_role_assets_paths|join(' ') }}"
+  {{ backups_role_assets_paths|join(' ') }}
 backups_role_cmd_restic_forget: >-
-  "echo \"## Restic forget ##\"  && 
-  restic forget --keep-last 5 --prune"
+  echo "## Restic forget ##"  && 
+  restic forget --keep-last 5 --prune
 backups_role_cmd_restic_check: >-
-  "echo \"## Restic check ##\" &&
-  restic check"
+  echo "## Restic check ##" &&
+  restic check
 
 # TODO Use this variable to save cron commands logs.
 backups_role_cmd_logfile: "/var/log/backups-cron.d/"
 
 backups_role_cmd_script: >-
-  "{{ backups_role_cmd_prepare_backup }} &&
+  {{ backups_role_cmd_prepare_backup }} &&
   {{ backups_role_cmd_restic_backup }} &&
   {{ backups_role_cmd_restic_forget }} &&
-  {{ backups_role_cmd_restic_check }}"
+  {{ backups_role_cmd_restic_check }}
