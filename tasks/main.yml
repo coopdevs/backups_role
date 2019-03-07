@@ -31,8 +31,10 @@
         url: "{{ backups_role_bucket_url }}"
         password: "{{ backups_role_restic_password }}"
         remote_credentials:
-          b2_account_id: "{{ backups_role_b2_account_id }}"
-          b2_account_key: "{{ backups_role_b2_account_key }}"
+          # See README.md for an explanation
+          # we cross app and account credentials here.
+          b2_account_id: "{{ backups_role_b2_app_key_id }}"
+          b2_account_key: "{{ backups_role_b2_app_key }}"
         jobs:
           - command: "{{ backups_role_cmd_script }}"
             at: "{{ backups_role_cron_job_at }}"
