@@ -10,7 +10,7 @@ This role uses [Restic](https://restic.net).
 
 Role Variables
 --------------
-```
+```yaml
 # Restic version
 backups_role_restic_version: '0.9.3'
 
@@ -36,7 +36,9 @@ backups_role_postgresql_user: "postgres"
 #+ we need to address different restic repos
 backups_role_restic_repo_name: {{ ansible.hostname }}
 
---- sensible variables ---
+#########################################
+### Warning! Sensible variables below ###
+#########################################
 
 # Restic repository password
 backups_role_restic_password:
@@ -60,10 +62,11 @@ Dependencies
 Example Playbook
 ----------------
 
-    - hosts: servers
-      roles:
-         - role: coopdevs.backups-role
-
+```yaml
+- hosts: servers
+  roles:
+    - role: coopdevs.backups-role
+```
 
 Sensible variables
 ------------------
@@ -96,7 +99,7 @@ To restore just a file from the last snapshot instead of the whole repo, you can
 
 Remember that all restic commands need to know where to communicate to and which credentials with. So you can either pass them as parameters, or export them as environment variables. For this case, we need:
 
-```
+```sh
 export RESTIC_REPOSITORY="b2:mybucketname:/"
 export RESTIC_PASSWORD="long sentence with at least 7 words"
 export B2_ACCOUNT_ID="our app key id"
