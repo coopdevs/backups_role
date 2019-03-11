@@ -11,6 +11,10 @@ backups_role_cron_job_at: '45 3 * * *'
 
 backups_role_restic_repo_name: "{{ ansible_hostname }}"
 
+backups_role_restic_user: 'restic'
+backups_role_restic_cron_stdout_file: '/var/log/cron.d/restic-stdout.log'
+backups_role_restic_cron_stderr_file: '/var/log/cron.d/restic-stderr.log'
+
 backups_role_postgresql_user: "postgres"
 
 # commands to execute in sequence

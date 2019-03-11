@@ -39,5 +39,9 @@
           - command: "{{ backups_role_cmd_script }}"
             at: "{{ backups_role_cron_job_at }}"
             user: "{{ backups_role_user }}"
+    restic_user: "{{ backups_role_restic_user }}"
+    restic_cron_stdout_file: "{{ backups_role_restic_cron_stdout_file }}"
+    restic_cron_stderr_file: "{{ backups_role_restic_cron_stderr_file }}"
+    
   include_role:
     name: vendor/paulfantom.restic
