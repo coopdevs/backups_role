@@ -6,10 +6,10 @@
 # popd
 
 # Postgres DB dump
-sudo -u {{ backups_role_postgresql_user }} /usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_last_backup_path }}/pg_dump
+/usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_last_backup_path }}/pg_dump
 
 # Compress configuration files
-tar -zcvf {{ backups_role_last_backup_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
+tar -czvf {{ backups_role_last_backup_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
 
 # Compress assets data
-tar -zcvf {{ backups_role_last_backup_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}
+tar -czvf {{ backups_role_last_backup_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}

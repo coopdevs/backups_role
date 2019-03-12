@@ -23,6 +23,23 @@
     group: "{{ backups_role_group }}"
     mode: 0775
 
+- name: Ensure postgresql role (user) for backups exists with read only access
+  postgresql_user:
+    db: "{{ backups_role_db_name }}"
+    name: "{{ backups_role_postgresql_user }}"
+    password: "{{ backups_role_postgresql_user_passwd }}"
+    priv: "CONNECT/{{ backups_role_db_name }}:SELECT"
+
+- name: Let backup user to use `{{ backups_role_sudoers_cmd_pattern }}` as root
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    # Pattern to match the line
+    regexp: '^{{ backups_role_user_name }} ALL=(root)'
+    # Actual line to exist in the file
+    line: "{{ backups_role_user_name }} ALL=(root) NOPASSWD: {{ backups_role_sudoers_cmd_pattern }}"
+    validate: '/usr/sbin/visudo -cf %s'
+
 - name: Install restic and configure restic repository
   vars:
     restic_version: "{{ backups_role_restic_version }}"
@@ -38,7 +55,7 @@
         jobs:
           - command: "{{ backups_role_cmd_script }}"
             at: "{{ backups_role_cron_job_at }}"
-            user: "{{ backups_role_user }}"
+            user: "{{ backups_role_user_name }}"
     restic_user: "{{ backups_role_restic_user }}"
     restic_cron_stdout_file: "{{ backups_role_restic_cron_stdout_file }}"
     restic_cron_stderr_file: "{{ backups_role_restic_cron_stderr_file }}"
