@@ -30,34 +30,4 @@ postgresql_user: "postgres"
 # backups_role_postgresql_user_passwd: ""
 # Fix to use python3 with ansible's postgresql module
 
-
-# FIXME This is ugly. We should instead put all commands inside
-# the backups script template so that we can treat it all as a unit
-# This comes handy to pipe all output to same file using restic role.
-# Also to have all command pipeline together. Makes little sense
-# to have it half in a template and half in variables.
-# commands to execute in sequence
-backups_role_cmd_prepare_backup: >-
-  echo "## Prepare backup ##" && 
-  {{ backups_role_script_path }}/backups.sh
-backups_role_cmd_restic_backup: >-
-  echo "## Restic backup ##"  && 
-  restic backup
-  {{ backups_role_last_backup_path }}/pg_dump
-  {{ backups_role_last_backup_path }}/config.tar.gz
-  {{ backups_role_assets_paths|join(' ') }}
-backups_role_cmd_restic_forget: >-
-  echo "## Restic forget ##"  && 
-  restic forget --keep-last 5 --prune
-backups_role_cmd_restic_check: >-
-  echo "## Restic check ##" &&
-  restic check
-backups_role_cmd_delete_tmp_backup: >-
-  echo "## Remove temporal files ##" &&
-  rm -rf "{{ backups_role_last_backup_path  }}"
-
-backups_role_cmd_script: >-
-  {{ backups_role_cmd_prepare_backup }} &&
-  {{ backups_role_cmd_restic_backup }} &&
-  {{ backups_role_cmd_restic_forget }} &&
-  {{ backups_role_cmd_restic_check }}
+backups_role_script_name: "backups.sh" 
