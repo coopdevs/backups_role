@@ -24,7 +24,7 @@
 - name: Copy backup script
   template:
     src: backups.sh.j2
-    dest: "{{ backups_role_script_path }}/backups.sh"
+    dest: "{{ backups_role_script_path }}/{{ backups_role_script_name }}"
     owner: "{{ backups_role_user_name }}"
     group: "{{ backups_role_user_group }}"
     mode: 0775
@@ -95,7 +95,7 @@
           b2_account_id: "{{ backups_role_b2_app_key_id }}"
           b2_account_key: "{{ backups_role_b2_app_key }}"
         jobs:
-          - command: "{{ backups_role_cmd_script }}"
+          - command: "{{ backups_role_script_path }}/{{ backups_role_script_name }}"
             at: "{{ backups_role_cron_job_at }}"
             user: "{{ backups_role_user_name }}"
     restic_user: "{{ backups_role_user_name }}"
