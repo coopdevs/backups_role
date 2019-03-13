@@ -7,12 +7,35 @@ backups_role_config_paths:
     - '/root'
     - '/usr/local/etc'
 backups_role_assets_paths: []
-backups_role_cron_job_at: '45 3 * * *'
+backups_role_cron_job_at: '45  3 * * *'
 
 backups_role_restic_repo_name: "{{ ansible_hostname }}"
 
-backups_role_postgresql_user: "postgres"
+backups_role_user_name: 'backups'
+backups_role_user_group: 'backups'
+backups_role_sudoers_cmd_pattern: '/bin/tar -czvf *'
 
+# unused
+#backups_role_restic_user: "{{ backups_role_user_name }}"
+# NOTE. Only last command of the && chain will use this log.
+# See *fixme* below to fix it
+backups_role_cron_stdout_file: '/var/log/cron.d/restic-stdout.log'
+backups_role_cron_stderr_file: '/var/log/cron.d/restic-stderr.log'
+
+# read only user
+backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
+# manager user
+postgresql_user: "postgres"
+# NOTE Please set this in a vault. Using a known default password or void one is unsafe.
+# backups_role_postgresql_user_passwd: ""
+# Fix to use python3 with ansible's postgresql module
+
+
+# FIXME This is ugly. We should instead put all commands inside
+# the backups script template so that we can treat it all as a unit
+# This comes handy to pipe all output to same file using restic role.
+# Also to have all command pipeline together. Makes little sense
+# to have it half in a template and half in variables.
 # commands to execute in sequence
 backups_role_cmd_prepare_backup: >-
   echo "## Prepare backup ##" && 
@@ -29,9 +52,9 @@ backups_role_cmd_restic_forget: >-
 backups_role_cmd_restic_check: >-
   echo "## Restic check ##" &&
   restic check
-
-# TODO Use this variable to save cron commands logs.
-backups_role_cmd_logfile: "/var/log/backups-cron.d/"
+backups_role_cmd_delete_tmp_backup: >-
+  echo "## Remove temporal files ##" &&
+  rm -rf "{{ backups_role_last_backup_path  }}"
 
 backups_role_cmd_script: >-
   {{ backups_role_cmd_prepare_backup }} &&

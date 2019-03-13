@@ -6,10 +6,16 @@
 # popd
 
 # Postgres DB dump
-sudo -u {{ backups_role_postgresql_user }} /usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_last_backup_path }}/pg_dump
+/usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_last_backup_path }}/pg_dump
+
+# NOTE
+# This script is meant to be executed by a very limited sudoer user.
+# It must be allowed to only execute `tar -czvf *` as root,
+# meaning that it can't uncompress, add options, or even change the options order.
+# This is a way to give to this user read-only access to whole filesystem.
 
 # Compress configuration files
-tar -zcvf {{ backups_role_last_backup_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
+sudo tar -czvf {{ backups_role_last_backup_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
 
 # Compress assets data
-tar -zcvf {{ backups_role_last_backup_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}
+sudo tar -czvf {{ backups_role_last_backup_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}
