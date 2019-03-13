@@ -31,7 +31,7 @@
 
 - name: Ensure directory for backups temporary data exists
   file:
-    path: "{{ backups_role_last_backup_path }}"
+    path: "{{ backups_role_tmp_path }}"
     state: directory
     owner: "{{ backups_role_user_name }}"
     group: "{{ backups_role_user_group }}"
