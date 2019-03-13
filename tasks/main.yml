@@ -1,34 +1,76 @@
 ---
+- name: Ensure group for backups user exists
+  group:
+    name: "{{ backups_role_user_group }}"
+    state: present
+
+- name: Ensure restricted user for backups exists
+  user:
+    name: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
+    system: true
+    state: present
+  when: backups_role_user_name != 'root'
+
+
 - name: Ensure directory for backup script exists
   file:
     path: "{{ backups_role_script_path }}"
     state: directory
-    owner: "{{ backups_role_user }}"
-    group: "{{ backups_role_group }}"
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
     mode: 0775
 
 - name: Copy backup script
   template:
     src: backups.sh.j2
     dest: "{{ backups_role_script_path }}/backups.sh"
-    owner: "{{ backups_role_user }}"
-    group: "{{ backups_role_group }}"
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
     mode: 0775
 
 - name: Ensure directory for backups temporary data exists
   file:
     path: "{{ backups_role_last_backup_path }}"
     state: directory
-    owner: "{{ backups_role_user }}"
-    group: "{{ backups_role_group }}"
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
     mode: 0775
 
-- name: Ensure postgresql role (user) for backups exists with read only access
+- name: Ensure postgresql "role" for backups exists with limited access to db
   postgresql_user:
     db: "{{ backups_role_db_name }}"
-    name: "{{ backups_role_postgresql_user }}"
-    password: "{{ backups_role_postgresql_user_passwd }}"
-    priv: "CONNECT/{{ backups_role_db_name }}:SELECT"
+    name: "{{ backups_role_postgresql_user_name }}"
+    password: "{{ backups_role_postgresql_user_password }}"
+    # This provides '{{ name  }}=c/{{ become_user }}' in {{ db }} database
+    # Plus any other access it can have through privileges granted to PUBLIC
+    # This `priv` key is not flexible enough to grant SELECT priv on *any* table
+    # inside database. Thus, we do it in two steps.
+    priv: "CONNECT"
+  become: true
+  become_user: "{{ postgresql_user }}"
+
+- name: Ensure postgresql "role" for backups has "select" access to any table in {{ backups_role_db_name }}
+  postgresql_privs:
+    db: "{{ backups_role_db_name }}"
+    role: "{{ backups_role_postgresql_user_name }}"
+    objs: ALL_IN_SCHEMA
+    # This ensures that this priv exists: {{ role }}=r/{{ become_user }}
+    privs: SELECT
+  become: true
+  become_user: "{{ postgresql_user }}"
+
+- name: Ensure postgresql "role" for backups has no other access to any table in {{ backups_role_db_name }}
+  postgresql_privs:
+    db: "{{ backups_role_db_name }}"
+    role: "{{ backups_role_postgresql_user_name }}"
+    objs: ALL_IN_SCHEMA
+    # Revoke all privs except SELECT
+    # https://www.postgresql.org/docs/current/sql-grant.html
+    privs: "INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER"
+    state: absent
+  become: true
+  become_user: "{{ postgresql_user }}"
 
 - name: Let backup user to use `{{ backups_role_sudoers_cmd_pattern }}` as root
   lineinfile:
@@ -45,8 +87,8 @@
     restic_version: "{{ backups_role_restic_version }}"
     restic_repos:
       - name: "{{ backups_role_restic_repo_name }}"
-        url: "{{ backups_role_bucket_url }}"
-        password: "{{ backups_role_restic_password }}"
+        url: "{{ backups_role_restic_repo_url }}"
+        password: "{{ backups_role_restic_repo_password }}"
         remote_credentials:
           # See README.md for an explanation
           # we cross app and account credentials here.
@@ -56,9 +98,10 @@
           - command: "{{ backups_role_cmd_script }}"
             at: "{{ backups_role_cron_job_at }}"
             user: "{{ backups_role_user_name }}"
-    restic_user: "{{ backups_role_restic_user }}"
-    restic_cron_stdout_file: "{{ backups_role_restic_cron_stdout_file }}"
-    restic_cron_stderr_file: "{{ backups_role_restic_cron_stderr_file }}"
+    restic_user: "{{ backups_role_user_name }}"
+    restic_group: "{{ backups_role_user_group }}"
+    restic_cron_stdout_file: "{{ backups_role_cron_stdout_file }}"
+    restic_cron_stderr_file: "{{ backups_role_cron_stderr_file }}"
     
   include_role:
     name: vendor/paulfantom.restic
