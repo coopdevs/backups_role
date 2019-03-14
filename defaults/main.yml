@@ -7,7 +7,7 @@ backups_role_config_paths:
     - '/root'
     - '/usr/local/etc'
 backups_role_assets_paths: []
-backups_role_cron_job_at: '45  3 * * *'
+backups_role_cron_job_at: '45 3 * * *'
 
 backups_role_restic_repo_name: "{{ ansible_hostname }}"
 
