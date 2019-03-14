@@ -79,8 +79,14 @@
     group: "root"
 
 - name: Install restic and configure restic repository
+  include_role:
+    name: vendor/paulfantom.restic
   vars:
     restic_version: "{{ backups_role_restic_version }}"
+    restic_user: "{{ backups_role_user_name }}"
+    restic_group: "{{ backups_role_user_group }}"
+    restic_cron_stdout_file: "{{ backups_role_cron_stdout_file }}"
+    restic_cron_stderr_file: "{{ backups_role_cron_stderr_file }}"
     restic_repos:
       - name: "{{ backups_role_restic_repo_name }}"
         url: "{{ backups_role_restic_repo_url }}"
@@ -94,10 +100,3 @@
           - command: "{{ backups_role_script_path }}/{{ backups_role_script_name }}"
             at: "{{ backups_role_cron_job_at }}"
             user: "{{ backups_role_user_name }}"
-    restic_user: "{{ backups_role_user_name }}"
-    restic_group: "{{ backups_role_user_group }}"
-    restic_cron_stdout_file: "{{ backups_role_cron_stdout_file }}"
-    restic_cron_stderr_file: "{{ backups_role_cron_stderr_file }}"
-    
-  include_role:
-    name: vendor/paulfantom.restic
