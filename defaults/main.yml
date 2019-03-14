@@ -26,8 +26,8 @@ backups_role_cron_stderr_file: '/var/log/cron.d/restic-stderr.log'
 backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
 # manager user
 postgresql_user: "postgres"
-# NOTE Please set this in a vault. Using a known default password or void one is unsafe.
-# backups_role_postgresql_user_passwd: ""
-# Fix to use python3 with ansible's postgresql module
 
-backups_role_script_name: "backups.sh" 
+# Fix to use python3 with ansible's postgresql module
+postgresql_python_library: "python3-psycopg2"
+
+backups_role_script_name: "backups.sh"
