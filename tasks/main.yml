@@ -20,10 +20,26 @@
     group: "{{ backups_role_user_group }}"
     mode: 0775
 
-- name: Copy backup script
+- name: Install backup script "prepare"
   template:
-    src: backups.sh.j2
-    dest: "{{ backups_role_script_path }}/{{ backups_role_script_name }}"
+    src: "{{ backups_role_script_prepare_template }}"
+    dest: "{{ backups_role_script_prepare }}"
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
+    mode: 0775
+
+- name: Install backup script "upload"
+  template:
+    src: "cron-upload.sh.j2"
+    dest: "{{ backups_role_script_upload }}"
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
+    mode: 0775
+
+- name: Install backup script "main"
+  template:
+    src: "cron-main.sh.j2"
+    dest: "{{ backups_role_script_main }}"
     owner: "{{ backups_role_user_name }}"
     group: "{{ backups_role_user_group }}"
     mode: 0775
@@ -93,10 +109,10 @@
         password: "{{ backups_role_restic_repo_password }}"
         remote_credentials:
           # See README.md for an explanation
-          # we cross app and account credentials here.
+          # restic takes app or account credentials indistinctly
           b2_account_id: "{{ backups_role_b2_app_key_id }}"
           b2_account_key: "{{ backups_role_b2_app_key }}"
         jobs:
-          - command: "{{ backups_role_script_path }}/{{ backups_role_script_name }}"
+          - command: "{{ backups_role_script_main }}"
             at: "{{ backups_role_cron_job_at }}"
             user: "{{ backups_role_user_name }}"
