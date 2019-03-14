@@ -1,0 +1,3 @@
+# Grant to user only the ability to create backups using tar as root.
+# user  host = (user to become) no prompt for password: allowed commands
+{{ backups_role_user_name }} ALL=(root) NOPASSWD: {{ backups_role_sudoers_cmd_pattern }}

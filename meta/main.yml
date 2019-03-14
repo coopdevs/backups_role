@@ -29,5 +29,8 @@ galaxy_info:
      - backups
 
 dependencies:
-  - src: paulfantom.restic
-    version: 0.9.0
+  # There's a fix after v 0.12.1 that isn't packed in any version yet
+  # Please consider updating and testing if a newer version is available.
+  - src: https://github.com/paulfantom/ansible-restic.git
+    version: 144f67033bcc6baabef2715aaaf890973be83c17
+    name: paulfantom.restic
