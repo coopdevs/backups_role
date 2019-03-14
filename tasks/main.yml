@@ -12,7 +12,6 @@
     state: present
   when: backups_role_user_name != 'root'
 
-
 - name: Ensure directory for backup script exists
   file:
     path: "{{ backups_role_script_path }}"
@@ -73,14 +72,11 @@
   become_user: "{{ postgresql_user }}"
 
 - name: Let backup user to use `{{ backups_role_sudoers_cmd_pattern }}` as root
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    # Pattern to match the line
-    regexp: '^{{ backups_role_user_name }} ALL=(root)'
-    # Actual line to exist in the file
-    line: "{{ backups_role_user_name }} ALL=(root) NOPASSWD: {{ backups_role_sudoers_cmd_pattern }}"
-    validate: '/usr/sbin/visudo -cf %s'
+  template:
+    src: "sudoers.j2"
+    dest: "/etc/sudoers.d/90-backup-user"
+    mode: 0440
+    group: "root"
 
 - name: Install restic and configure restic repository
   vars:
