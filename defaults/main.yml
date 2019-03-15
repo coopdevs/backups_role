@@ -15,8 +15,7 @@ backups_role_user_name: 'backups'
 backups_role_user_group: 'backups'
 backups_role_sudoers_cmd_pattern: '/bin/tar -czvf *'
 
-# NOTE. Only last command of the && chain will use this log.
-# See *fixme* below to fix it
+# Log files of the backup scripts run by cron
 backups_role_cron_stdout_file: '/var/log/cron.d/restic-stdout.log'
 backups_role_cron_stderr_file: '/var/log/cron.d/restic-stderr.log'
 
@@ -28,4 +27,11 @@ postgresql_user: "postgres"
 # Fix to use python3 with ansible's postgresql module
 postgresql_python_library: "python3-psycopg2"
 
-backups_role_script_name: "backups.sh"
+
+# Backup scripts
+
+backups_role_script_prepare_template: "cron-prepare.sh.j2"
+backups_role_script_main:    "{{ backups_role_script_path }}/backup.sh"
+backups_role_script_prepare: "{{ backups_role_script_path }}/backup_prepare.sh"
+backups_role_script_upload:  "{{ backups_role_script_path }}/backup_upload.sh"
+

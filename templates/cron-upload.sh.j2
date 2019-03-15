@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Exit with error code 1 if any command fails
+set -e
+
+echo "## Restic backup ##"
+restic backup \
+	{{ backups_role_tmp_path }}/pg_dump \
+	{{ backups_role_tmp_path }}/config.tar.gz \
+	{{ backups_role_assets_paths|join(' ') }}
+
+echo "## Restic forget ##"
+restic forget --keep-last 5 --prune
+
+echo "## Restic check ##"
+restic check
+
+echo "## Remove temporal files ##"
+rm -rf "{{ backups_role_tmp_path  }}"
