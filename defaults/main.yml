@@ -31,10 +31,9 @@ postgresql_python_library: "python3-psycopg2"
 
 
 # Backup scripts
-{{ backups_role_cron_script1 }} && {{ backups_role_cron_script2 }}
 
 backups_role_script_prepare_template: "cron-prepare.sh.j2"
-backups_role_script_main: {{ backups_role_script_path }}/backup.sh
-backups_role_script_prepare:{{ backups_role_script_path }}/backup_prepare.sh
-backups_role_script_upload:{{ backups_role_script_path }}/backup_upload.sh
+backups_role_script_main:    "{{ backups_role_script_path }}/backup.sh"
+backups_role_script_prepare: "{{ backups_role_script_path }}/backup_prepare.sh"
+backups_role_script_upload:  "{{ backups_role_script_path }}/backup_upload.sh"
 
