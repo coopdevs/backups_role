@@ -43,6 +43,7 @@ backups_role_user_group: 'backups'
 backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
 # Postgres internal admin role
 postgresql_user: "postgres"
+backups_role_db_name: "postgres"
 
 # Restic repository name used only in case
 #+ we need to address different restic repos
