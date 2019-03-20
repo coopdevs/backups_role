@@ -20,6 +20,14 @@
     group: "{{ backups_role_user_group }}"
     mode: 0775
 
+- name: Ensure directory for backups temporary data exists
+  file:
+    path: "{{ backups_role_tmp_path }}"
+    state: directory
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
+    mode: 0775
+
 - name: Install backup script "prepare"
   template:
     src: "{{ backups_role_script_prepare_template }}"
@@ -40,14 +48,6 @@
   template:
     src: "cron-main.sh.j2"
     dest: "{{ backups_role_script_main }}"
-    owner: "{{ backups_role_user_name }}"
-    group: "{{ backups_role_user_group }}"
-    mode: 0775
-
-- name: Ensure directory for backups temporary data exists
-  file:
-    path: "{{ backups_role_tmp_path }}"
-    state: directory
     owner: "{{ backups_role_user_name }}"
     group: "{{ backups_role_user_group }}"
     mode: 0775
