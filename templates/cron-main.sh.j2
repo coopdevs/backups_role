@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Exit with error code 1 if any command fails
+set -e
+
+# Execute scripts in chain if error code is ok
+{{ backups_role_script_prepare }} && {{ backups_role_script_upload }}
