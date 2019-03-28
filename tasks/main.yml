@@ -116,3 +116,4 @@
           - command: "{{ backups_role_script_main }}"
             at: "{{ backups_role_cron_job_at }}"
             user: "{{ backups_role_user_name }}"
+        check: false
