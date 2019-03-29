@@ -26,14 +26,3 @@ echo "
 "
 restic check
 echo "...done"
-
-echo "
-## Remove temporal files ##
-"
-rm -f \
-  {% if backups_role_script_prepare_template == "cron-prepare.sh.j2" %}
-	{{ backups_role_tmp_path }}/pg_dump \
-	{{ backups_role_tmp_path }}/config.tar.gz \
-  {% endif %}
-  {{ backups_role_assets_paths | join(' ') }}
-echo "...done"

@@ -3,5 +3,11 @@
 # Exit with error code 1 if any command fails
 set -e
 
+# Create temporal directory
+mkdir -p "{{ backups_role_tmp_path }}"
+
 # Execute scripts in chain if error code is ok
 {{ backups_role_script_prepare }} && {{ backups_role_script_upload }}
+
+# Remove temporal directory
+rm -rf "{{ backups_role_tmp_path }}"
