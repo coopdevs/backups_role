@@ -50,8 +50,15 @@ backups_role_db_name: "postgres"
 backups_role_restic_repo_name: {{ ansible.hostname }}
 
 #########################################
-### Warning! Sensible variables below ###
+### WARNING! Sensible variables below ###
 #########################################
+###  Consider placing them inside an  ###
+###  ansible-vault. As an example see ###
+###  defaults/secrets.yml.example     ###
+#########################################
+
+# Password for postgresql unprivileged backups user 
+backups_role_postgresql_user_passwd
 
 # Restic repository password
 backups_role_restic_repo_password:
