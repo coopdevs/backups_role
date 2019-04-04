@@ -61,12 +61,12 @@ backups_role_restic_repo_name: {{ ansible.hostname }}
 backups_role_postgresql_user_passwd
 
 # Restic repository password
-backups_role_restic_password:
+backups_role_restic_repo_password:
 
 # Remote bucket URL in restic format
 # Example for backblaze:  "b2:bucketname:path/to/repo"
 # Example for local repo: "/var/backups/repo"
-backups_role_bucket_url:
+backups_role_restic_repo_url:
 
 # Backblaze "application" or bucket credentials
 backups_role_b2_app_key_id:
