@@ -36,3 +36,36 @@ backups_role_script_main:    "{{ backups_role_script_path }}/backup.sh"
 backups_role_script_prepare: "{{ backups_role_script_path }}/backup_prepare.sh"
 backups_role_script_upload:  "{{ backups_role_script_path }}/backup_upload.sh"
 
+# Restic forget policy:
+# How many snapshots do we want to keep?
+#
+# Rules for keep_T: N
+# - For last N units of time T {hour, day, week, month, year},
+#   that have snapshots, keep among them only the most recent N snapshots.
+# - Overlapping "keep_" filters have a safe "OR" effect: a snapshot just needs
+#   one matching filter to be kept.
+#
+# Implications
+# - 1st latest, 1st daily and 1st weekly are always the same snapshot.
+# - if backups are only done weekly, then keep_{weekly, daily, hourly, last}
+#   are redundant, as only units of time (like hours) that have a snapshot are
+#   taken into account, even if they are from different greater units (days, weeks).
+# - when combining non divisor/multiple units (like weeks and months) the
+#   total amount of kept snapshots may fluctuate.
+#
+# Note:
+# - setting one keep filter variable to 0 has a safe ignore effect
+# - official docs: https://restic.readthedocs.io/en/stable/060_forget.html#removing-snapshots-according-to-a-policy
+#
+# Total kept snapshots:
+# with last=4, daily=3, weekly=4 and daily automatic backups:
+# - `last` only takes effect if more than one snapshot is taken in a day, that is, manualy.
+# - `daily` will keep 3 daily snapshots
+# - `weekly` will keep 3 extra snapshots, last Sundays.
+
+backups_role_keep_last: 4
+backups_role_keep_hourly: 0
+backups_role_keep_daily: 3
+backups_role_keep_weekly: 4
+backups_role_keep_monthly: 0
+backups_role_keep_yearly: 0
