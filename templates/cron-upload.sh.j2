@@ -3,9 +3,10 @@
 # Exit with error code 1 if any command fails
 set -e
 
+# See cron-prepare.sh for an explanation of this function
 function title {
-  echo -e "\n## $1 ##" | tee /dev/fd/2;
-  date | tee /dev/fd/2;
+  echo -e "\n## $1 ##" | tee -a /dev/fd/2;
+  date | tee -a /dev/fd/2;
 }
 
 title "Restic backup"
