@@ -1,4 +1,4 @@
-backups-role
+backups_role
 =========
 
 Backups strategies for Coopdevs projects.
@@ -85,7 +85,7 @@ Example Playbook
 ```yaml
 - hosts: servers
   roles:
-    - role: coopdevs.backups-role
+    - role: coopdevs.backups_role
 ```
 
 Sensible variables
