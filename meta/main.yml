@@ -2,7 +2,6 @@ galaxy_info:
   author: coopdevs
   description: Backups strategy for Coopdevs projects.
   company: coopdevs
-  role_name: backups-role
 
   license: GPLv3
 
