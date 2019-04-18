@@ -1,7 +1,9 @@
 ---
 backups_role_restic_version: '0.9.3'
-backups_role_script_path: '/opt/backup'
-backups_role_tmp_path: "{{ backups_role_script_path }}/.tmp"
+backups_role_path: '/opt/backup'
+backups_role_script_path: "{{ backups_role_path }}/bin"
+backups_role_tmp_path: "{{ backups_role_path }}/.tmp"
+backups_role_restore_path: "{{ backups_role_path }}/restore"
 backups_role_config_paths:
     - '/etc'
     - '/root'
