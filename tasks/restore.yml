@@ -1,0 +1,17 @@
+---
+- name: Ensure directory for snapshot restore exists
+  file:
+    path: "{{ backups_role_restore_path }}"
+    state: directory
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
+    mode: 0775
+
+# Use the restic helper installed by paulfantom.restic 
+# "These scripts are named after your repository and will ensure environment variables are correct for that repository."
+# In backups_role case, the restic repo name is set by default in {{ backups_role_restic_repo_name }}.
+# See: https://github.com/paulfantom/ansible-restic/tree/0.13.0#helpers
+- name: Restore last backup for this restic repo
+  command: "restic-{{ backups_role_restic_repo_name }} restore latest --target {{ backups_role_restore_path }}"
+  become: yes
+  become_user: "{{ backups_role_user_name }}"
