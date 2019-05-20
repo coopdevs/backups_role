@@ -33,7 +33,9 @@ function title {
 # popd
 
 title "Postgres DB dump"
-/usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_tmp_path }}/pg_dump
+for DB in {{ backups_role_db_names | map('quote') | join(' ')}}; do
+  /usr/bin/pg_dump --encoding=UTF8 "$DB" > "{{ backups_role_tmp_path }}/pg_dump_$DB"
+done
 echo "...done"
 
 title "Compress configuration files"

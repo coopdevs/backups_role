@@ -26,6 +26,7 @@ backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
 # manager user
 postgresql_user: "postgres"
 backups_role_db_name: "postgres"
+backups_role_db_names: [ "{{ backups_role_db_name }}" ]
 
 # Fix to use python3 with ansible's postgresql module
 postgresql_python_library: "python3-psycopg2"

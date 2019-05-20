@@ -43,7 +43,7 @@ backups_role_user_group: 'backups'
 backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
 # Postgres internal admin role
 postgresql_user: "postgres"
-backups_role_db_name: "postgres"
+backups_role_db_names: [ "postgres" ]
 
 # Restic repository name used only in case
 #+ we need to address different restic repos
@@ -57,8 +57,8 @@ backups_role_restic_repo_name: {{ ansible.hostname }}
 ###  defaults/secrets.yml.example     ###
 #########################################
 
-# Password for postgresql unprivileged backups user 
-backups_role_postgresql_user_passwd
+# Password for postgresql unprivileged backups user
+backups_role_postgresql_user_passwd:
 
 # Restic repository password
 backups_role_restic_repo_password:
