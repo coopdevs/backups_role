@@ -33,7 +33,20 @@ function title {
 # popd
 
 title "Postgres DB dump"
-/usr/bin/pg_dump --encoding=UTF8 {{ backups_role_db_name }} > {{ backups_role_tmp_path }}/pg_dump
+{# jinja comment.
+ Next non-comment line below should render to something like:
+ for DB in "main" "secondary" "test"; do
+ But a simple | join(' ') would render instead to:
+ for DB in main secondary test; do
+ Thus, we do join('" "'):
+ for DB in main" "secondary" "test; do
+ And add the missing double quotes as literals outside jinja's reach, like
+ "{{ ... }}"
+ https://stackoverflow.com/a/49692186/3625897
+#}
+for DB in "{{ backups_role_db_names | join('" "')  }}"; do
+  /usr/bin/pg_dump --encoding=UTF8 "$DB" > "{{ backups_role_tmp_path }}/pg_dump_$DB"
+done
 echo "...done"
 
 title "Compress configuration files"

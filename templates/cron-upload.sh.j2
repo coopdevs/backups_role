@@ -12,10 +12,12 @@ function title {
 title "Restic backup"
 restic backup \
   {% if backups_role_script_prepare_template == "cron-prepare.sh.j2" %}
-	{{ backups_role_tmp_path }}/pg_dump \
-	{{ backups_role_tmp_path }}/config.tar.gz \
+  {% for db in backups_role_db_names %}
+  "{{ backups_role_tmp_path }}/pg_dump_{{ db }}" \
+  {% endfor %}
+  "{{ backups_role_tmp_path }}/config.tar.gz" \
   {% endif %}
-	{{ backups_role_assets_paths|join(' ') }}
+  {{ backups_role_assets_paths|join(' ') }}
 
 echo "...done"
 

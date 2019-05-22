@@ -54,7 +54,7 @@
 
 - name: Ensure postgresql "role" for backups exists with limited access to db
   postgresql_user:
-    db: "{{ backups_role_db_name }}"
+    db: "{{ item }}"
     name: "{{ backups_role_postgresql_user_name }}"
     password: "{{ backups_role_postgresql_user_password }}"
     # This provides '{{ name  }}=c/{{ become_user }}' in {{ db }} database
@@ -64,20 +64,22 @@
     priv: "CONNECT"
   become: true
   become_user: "{{ postgresql_user }}"
+  with_items: "{{ backups_role_db_names }}"
 
-- name: Ensure postgresql "role" for backups has "select" access to any table in {{ backups_role_db_name }}
+- name: Ensure postgresql "role" for backups has "select" access to any table in {{ backups_role_db_names }}
   postgresql_privs:
-    db: "{{ backups_role_db_name }}"
+    db: "{{ item }}"
     role: "{{ backups_role_postgresql_user_name }}"
     objs: ALL_IN_SCHEMA
     # This ensures that this priv exists: {{ role }}=r/{{ become_user }}
     privs: SELECT
   become: true
   become_user: "{{ postgresql_user }}"
+  with_items: "{{ backups_role_db_names }}"
 
-- name: Ensure postgresql "role" for backups has no other access to any table in {{ backups_role_db_name }}
+- name: Ensure postgresql "role" for backups has no other access to any table in {{ backups_role_db_names }}
   postgresql_privs:
-    db: "{{ backups_role_db_name }}"
+    db: "{{ item }}"
     role: "{{ backups_role_postgresql_user_name }}"
     objs: ALL_IN_SCHEMA
     # Revoke all privs except SELECT
@@ -86,6 +88,7 @@
     state: absent
   become: true
   become_user: "{{ postgresql_user }}"
+  with_items: "{{ backups_role_db_names }}"
 
 - name: Let backup user to use `{{ backups_role_sudoers_cmd_pattern }}` as root
   template:
