@@ -58,7 +58,7 @@ backups_role_restic_repo_name: {{ ansible.hostname }}
 #########################################
 
 # Password for postgresql unprivileged backups user
-backups_role_postgresql_user_passwd:
+backups_role_postgresql_user_password:
 
 # Restic repository password
 backups_role_restic_repo_password:
