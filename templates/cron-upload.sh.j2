@@ -22,7 +22,14 @@ restic backup \
 echo "...done"
 
 title "Restic forget"
-restic forget --keep-last 5 --prune
+restic forget \
+  --keep-last    {{ backups_role_keep_last }} \
+  --keep-hourly  {{ backups_role_keep_hourly }} \
+  --keep-daily   {{ backups_role_keep_daily }} \
+  --keep-weekly  {{ backups_role_keep_weekly }} \
+  --keep-monthly {{ backups_role_keep_monthly }} \
+  --keep-yearly  {{ backups_role_keep_yearly }} \
+  --prune
 echo "...done"
 
 title "Restic check"
