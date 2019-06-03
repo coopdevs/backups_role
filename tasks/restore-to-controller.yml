@@ -1,0 +1,20 @@
+---
+- name: Ensure directory for snapshot restore exists at the controller
+  local_action:
+    module: file
+    path: "./{{ backups_role_restore_path }}"
+    state: directory
+    mode: 0775
+  become: no
+
+- name: Render script template that wraps restic with credentials
+  local_action:
+    module: template
+    src: 'restic.helper.j2'
+    dest: "./{{ backups_role_restore_path }}/restic-{{ backups_role_restic_repo_name }}"
+    mode: '0750'
+    no_log: true
+
+- name: Restore last backup for this restic repo
+  local_action: "command: ./{{ backups_role_restore_path }}/restic-{{ backups_role_restic_repo_name }} restore latest --target {{ backups_role_restore_path }}"
+  become: no
