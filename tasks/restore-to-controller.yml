@@ -1,8 +1,12 @@
 ---
 - set_fact:
     work_path: "{{ lookup('env','PWD') }}/backup-restore"
+  tags:
+  - install
+  - restore
 
-- block:
+- name: Install restic and its environment
+  block:
 
   - name: Configure restic
     import_role:
@@ -28,19 +32,31 @@
       src: '../vendor/paulfantom.restic/templates/restic.helper.j2'
       dest: "{{ work_path }}/restic-{{ backups_role_restic_repo_name }}"
       mode: '0750'
-      #  no_log: true
+    no_log: true
     with_items: [ "{{ backups_role_restic_repo  }}" ]
+
+  # affects to whole "block"
+  delegate_to: 127.0.0.1
+  tags:
+  - install
+  - restore
+
+- name: Restore last snapshot and remove secrets
+  block:
 
   - name: Restore last backup for this restic repo
     command: "{{ work_path }}/restic-{{ backups_role_restic_repo_name }} restore latest --target {{ work_path }}/restored"
 
   - name: Safely delete restic wrapper with secrets
     block:
-    - command: "shred {{ work_path }}/restic-{{ backups_role_restic_repo_name }}"
-    - file:
+    - name: "Shred restic's wrapper script to make secrets unrecoverable"
+      command: "shred {{ work_path }}/restic-{{ backups_role_restic_repo_name }}"
+    - name: Remove already shredded wrapper script
+      file:
         path: "{{ work_path }}/restic-{{ backups_role_restic_repo_name }}"
         state: absent
-    tags: secure_delete_secrets
 
   # affects to whole "block"
   delegate_to: 127.0.0.1
+  tags:
+  - restore

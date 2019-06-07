@@ -1,12 +1,12 @@
 backups_role
 =========
 
-Backups strategies for Coopdevs projects.
+Backup and restore strategies for Coopdevs projects.
 
 Requirements
 ------------
 
-This role uses [Restic](https://restic.net).
+This role uses [Restic](https://restic.net) with the help of [restic-ansible](https://github.com/paulfantom/ansible-restic)
 
 Role Variables
 --------------
@@ -79,14 +79,51 @@ Dependencies
 
 * [paulfantom.restic](https://galaxy.ansible.com/paulfantom/restic)
 
-Example Playbook
-----------------
+Usage
+-----
 
+You will need to prepare an inventory for your hosts with the variables above. For instance, in `inventory/hosts`
+
+### Sample postgresql playbook with backups
 ```yaml
-- hosts: servers
+# playbooks/main.yml
+---
+- name: Install Postgresql with automatic backups
+  hosts: servers
+  become: yes
   roles:
+    - role: geerlingguy.postgresql
     - role: coopdevs.backups_role
 ```
+
+### Playbook to restore a backup to the controller
+```yaml
+# playbooks/restore.yml
+---
+- name: Restore backup locally
+  hosts: servers
+  tasks:
+    - import_role:
+        name: coopdevs.backups_role
+        tasks_from: restore-to-controller.yml
+```
+
+### Restore snapshot using playbook from above
+```shell
+ansible-playbook playbooks/restore.yml -i inventory/hosts -l servers
+```
+
+This playbook won't install any binary globally, but it still needs root power. Therefore, you may need to provide sudo password:
+```shell
+ansible-playbook playbooks/restore.yml -i inventory/hosts -l servers --ask-become-pass
+```
+
+Also, by default, it installs restic and a handy wrapper, restores the snapshot and securely removes the wrapper, to avoid leaving traces by default. However, if you prefer to install the wrapper and play around with it, you can filter with the tag `install`:
+
+```shell
+ansible-playbook playbooks/restore.yml -i inventory/hosts -l servers --tags install
+```
+
 
 Sensible variables
 ------------------
