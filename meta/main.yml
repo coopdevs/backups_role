@@ -28,3 +28,11 @@ galaxy_info:
 dependencies:
   - name: paulfantom.restic
     version: 0.13.0
+    # We don't want the role to run
+    # when we import tasks from restore-to-controller,
+    # as it is executed locally to the controller machine
+    # and we don't want configure.yml to be run, i.e.
+    # the one that sets up the cronfiles.
+    # Instead, we are going to import
+    # this role tasks only when needed
+    tags: never
