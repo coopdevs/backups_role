@@ -107,16 +107,4 @@
     restic_cron_stdout_file: "{{ backups_role_cron_stdout_file }}"
     restic_cron_stderr_file: "{{ backups_role_cron_stderr_file }}"
     restic_repos:
-      - name: "{{ backups_role_restic_repo_name }}"
-        url: "{{ backups_role_restic_repo_url }}"
-        password: "{{ backups_role_restic_repo_password }}"
-        remote_credentials:
-          # See README.md for an explanation
-          # restic takes app or account credentials indistinctly
-          b2_account_id: "{{ backups_role_b2_app_key_id }}"
-          b2_account_key: "{{ backups_role_b2_app_key }}"
-        jobs:
-          - command: "{{ backups_role_script_main }}"
-            at: "{{ backups_role_cron_job_at }}"
-            user: "{{ backups_role_user_name }}"
-        check: false
+    - "{{ backups_role_restic_repo }}"
