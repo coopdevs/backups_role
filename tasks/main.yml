@@ -1,13 +1,21 @@
 ---
-- name: Ensure group for backups user exists
+- name: Ensure primary group for backups user exists
   group:
     name: "{{ backups_role_user_group }}"
     state: present
+
+- name: Ensure additional groups for backups user exist
+  group:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ backups_role_user_groups.split(',') }}"
+  when: backups_role_user_groups != ''
 
 - name: Ensure restricted user for backups exists
   user:
     name: "{{ backups_role_user_name }}"
     group: "{{ backups_role_user_group }}"
+    groups: "{{ backups_role_user_groups }}"
     system: true
     state: present
   when: backups_role_user_name != 'root'
