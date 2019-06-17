@@ -11,7 +11,7 @@ backups_role_config_paths:
 backups_role_assets_paths: []
 backups_role_cron_job_at: '45 3 * * *'
 
-backups_role_restic_repo_name: "{{ ansible_hostname }}"
+backups_role_restic_repo_name: "{{ inventory_hostname_short }}"
 
 backups_role_user_name: 'backups'
 backups_role_user_group: 'backups'
