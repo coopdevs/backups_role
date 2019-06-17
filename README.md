@@ -102,10 +102,23 @@ You will need to prepare an inventory for your hosts with the variables above. F
 ---
 - name: Restore backup locally
   hosts: servers
+  connection: local
   tasks:
-    - import_role:
-        name: coopdevs.backups_role
-        tasks_from: restore-to-controller.yml
+  - import_role:
+      name: coopdevs.backups_role
+      tasks_from: restore-to-controller.yml
+```
+
+### Playbook to restore a backup to the host
+```yaml
+# playbooks/restore-in-situ.yml
+---
+- name: Restore backup to the host
+  hosts: servers
+  tasks:
+  - import_role:
+      name: coopdevs.backups_role
+      tasks_from: restore-to-host.yml
 ```
 
 ### Restore snapshot using playbook from above
@@ -118,7 +131,7 @@ This playbook won't install any binary globally, but it still needs root power. 
 ansible-playbook playbooks/restore.yml -i inventory/hosts -l servers --ask-become-pass
 ```
 
-Also, by default, it installs restic and a handy wrapper, restores the snapshot and securely removes the wrapper, to avoid leaving traces by default. However, if you prefer to install the wrapper and play around with it, you can filter with the tag `install`:
+By default, it creates a directory with restic and a handy wrapper and a restore of the latest snapshot. Finally, it removes securely the wrapper, as it contains credentials that we don't want them to be lying around. However, if you prefer to install the wrapper and use it manually, you can run the playbook with by the tag `install`:
 
 ```shell
 ansible-playbook playbooks/restore.yml -i inventory/hosts -l servers --tags install
