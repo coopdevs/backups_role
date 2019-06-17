@@ -23,6 +23,11 @@
 - name: Install restic and its environment
   block:
 
+  - name: Ensure working directory exists
+    file:
+      state: 'directory'
+      path: '{{ work_path }}'
+
   - name: Configure restic
     import_role:
       name: paulfantom.restic
