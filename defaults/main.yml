@@ -1,7 +1,7 @@
 ---
 backups_role_restic_version: '0.9.3'
 backups_role_path: '/opt/backup'
-backups_role_script_path: "{{ backups_role_path }}/bin"
+backups_role_script_dir: "{{ backups_role_path }}/bin"
 backups_role_tmp_path: "{{ backups_role_path }}/.tmp"
 backups_role_restore_path: "{{ backups_role_path }}/restore"
 backups_role_config_paths:
@@ -9,9 +9,9 @@ backups_role_config_paths:
     - '/root'
     - '/usr/local/etc'
 backups_role_assets_paths: []
-backups_role_cron_job_at: '45 3 * * *'
+backups_role_cron_job_at: '45 03 * * *'
 
-backups_role_restic_repo_name: "{{ ansible_hostname }}"
+backups_role_restic_repo_name: "{{ inventory_hostname }}"
 
 backups_role_user_name: 'backups'
 backups_role_user_group: 'backups'
@@ -37,9 +37,7 @@ postgresql_python_library: "python3-psycopg2"
 # Backup scripts
 
 backups_role_script_prepare_template: "cron-prepare.sh.j2"
-backups_role_script_main:    "{{ backups_role_script_path }}/backup.sh"
-backups_role_script_prepare: "{{ backups_role_script_path }}/backup_prepare.sh"
-backups_role_script_upload:  "{{ backups_role_script_path }}/backup_upload.sh"
+backups_role_script_path:    "{{ backups_role_script_dir }}/backup.sh"
 
 # Restic forget policy:
 # How many snapshots do we want to keep?

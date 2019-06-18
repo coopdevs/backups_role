@@ -1,14 +1,4 @@
-#!/bin/bash
-
-# Exit with error code 1 if any command fails
-set -e
-
-# See cron-prepare.sh for an explanation of this function
-function title {
-  echo -e "\n## $1 ##" | tee -a /dev/fd/2;
-  date | tee -a /dev/fd/2;
-}
-
+{# This template is included by cron-main.sh.j2 #}
 title "Restic backup"
 restic backup \
   {% if backups_role_script_prepare_template == "cron-prepare.sh.j2" %}
@@ -19,7 +9,7 @@ restic backup \
   {% endif %}
   {{ backups_role_assets_paths|join(' ') }}
 
-echo "...done"
+echo "…done"
 
 title "Restic forget"
 restic forget \
@@ -30,8 +20,8 @@ restic forget \
   --keep-monthly {{ backups_role_keep_monthly }} \
   --keep-yearly  {{ backups_role_keep_yearly }} \
   --prune
-echo "...done"
+echo "…done"
 
 title "Restic check"
 restic check
-echo "...done"
+echo "…done"
