@@ -34,10 +34,12 @@ backups_role_tmp_path: '/tmp/backups'
 backups_role_config_paths: ['/etc', '/root', '/usr/local/etc']
 backups_role_assets_paths: []
 
-# System user and group. Who will run scripts, restic and cron jobs
+# System user, its primary group, and additional ones.
+#+ Who will run scripts, restic and cron jobs
 #+  and will own directories and files
 backups_role_user_name: 'backups'
 backups_role_user_group: 'backups'
+backups_role_user_groups: ''
 
 # Postgresql internal read-only role to perform the dump
 backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
