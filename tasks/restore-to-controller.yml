@@ -1,12 +1,32 @@
 ---
-- set_fact:
-    work_path: "{{ lookup('env','PWD') }}/backup-restore"
+- name: "Prepare ansible's environment"
+  block:
+
+  - name: Ensure that this set of tasks are running locally
+    assert:
+      that: ansible_connection == "local"
+      fail_msg: >
+        This playbook is intended to be executed in controller machine,
+        but is running somewhere else.
+
+        Please refer to the README of this role to see an example of how to use this tasklist.
+      success_msg: Connection is local
+
+  - name: Define working path based on current directory
+    set_fact:
+      work_path: "{{ lookup('env','PWD') }}/backup-restore"
+
   tags:
   - install
   - restore
 
 - name: Install restic and its environment
   block:
+
+  - name: Ensure working directory exists
+    file:
+      state: 'directory'
+      path: '{{ work_path }}'
 
   - name: Configure restic
     import_role:
@@ -35,8 +55,7 @@
     no_log: true
     with_items: [ "{{ backups_role_restic_repo  }}" ]
 
-  # affects to whole "block"
-  delegate_to: 127.0.0.1
+  # block "Install restic and its environment"
   tags:
   - install
   - restore
@@ -56,7 +75,6 @@
         path: "{{ work_path }}/restic-{{ backups_role_restic_repo_name }}"
         state: absent
 
-  # affects to whole "block"
-  delegate_to: 127.0.0.1
+  # block: "Restore last snapshot and remove secrets"
   tags:
   - restore
