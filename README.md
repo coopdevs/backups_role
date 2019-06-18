@@ -15,7 +15,8 @@ Role Variables
 backups_role_restic_version: '0.9.3'
 
 # Location of the scripts
-backups_role_script_dir: '/opt/backup'
+backups_role_path: '/opt/backup'
+backups_role_script_dir: "{{ backups_role_path }}/bin"
 
 # Overridable name of the template to generate
 #+ the "prepare" script, which will be embedded inside
