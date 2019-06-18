@@ -1,36 +1,9 @@
-#!/bin/bash
-
-# Exit with error code 1 if any command fails
-set -e
-
-# Clone standard output to standard error
-#+ This way we have titles and datetimes in both outputs: err and out
-#+ and therefore error messages appear within a context.
-#+ In Linux this is equivalent to /dev/std{out,err}
-#+ that sounds more intuitive, but it's not as portable.
-#+ See https://unix.stackexchange.com/a/123659
-
-# Use `tee -a` to append error logs instead of overwritting
-# It is interpreted before the later append stderr redirection `2>>`
-#+ Example:
-#+     for i in 1 2 3; do { date | tee /dev/fd/2; } >> out.log 2>> err.log ; done
-#+ err.log has only one line, while out.log has three.
-
-function title {
-  echo -e "\n## $1 ##" | tee -a /dev/fd/2;
-  date | tee -a /dev/fd/2;
-}
-
+{# This template is included by cron-main.sh.j2 #}
 # NOTE
 # This script is meant to be executed by a very limited sudoer user.
 # It must be allowed to only execute `tar -czvf *` as root,
 # meaning that it can't uncompress, add options, or even change the options order.
 # This is a way to give to this user read-only access to whole filesystem.
-
-# Backup git revision
-# pushd /home/git_repo/current
-# git rev-parse --verify HEAD > {{ backups_role_tmp_path }}/git_rev
-# popd
 
 title "Postgres DB dump"
 {# jinja comment.
@@ -41,18 +14,18 @@ title "Postgres DB dump"
  Thus, we do join('" "'):
  for DB in main" "secondary" "test; do
  And add the missing double quotes as literals outside jinja's reach, like
- "{{ ... }}"
+ "{{ … }}"
  https://stackoverflow.com/a/49692186/3625897
 #}
 for DB in "{{ backups_role_db_names | join('" "')  }}"; do
   /usr/bin/pg_dump --encoding=UTF8 "$DB" > "{{ backups_role_tmp_path }}/pg_dump_$DB"
 done
-echo "...done"
+echo "…done"
 
 title "Compress configuration files"
 sudo tar -czvf {{ backups_role_tmp_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
-echo "...done"
+echo "…done"
 
 title "Compress assets data"
 sudo tar -czvf {{ backups_role_tmp_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}
-echo "...done"
+echo "…done"

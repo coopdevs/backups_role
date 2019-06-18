@@ -3,17 +3,40 @@
 # Exit with error code 1 if any command fails
 set -e
 
+# Clone standard output to standard error
+#+ This way we have titles and datetimes in both outputs: err and out
+#+ and therefore error messages appear within a context.
+#+ In Linux this is equivalent to /dev/std{out,err}
+#+ that sounds more intuitive, but it's not as portable.
+#+ See https://unix.stackexchange.com/a/123659
+
+# Use `tee -a` to append error logs instead of overwritting
+# It is interpreted before the later append stderr redirection `2>>`
+#+ Example:
+#+     for i in 1 2 3; do { date | tee /dev/fd/2; } >> out.log 2>> err.log ; done
+#+ err.log has only one line, while out.log has three.
+
+function title {
+  echo -e "\n## $1 ##" | tee -a /dev/fd/2;
+  date | tee -a /dev/fd/2;
+}
+
 # Remove temporal directory
 function clean {
   rm -rf "{{ backups_role_tmp_path }}"
 }
 
 # Set up an exit trap to delete temporal directory
-#+ even if there are errors before exiting.
+#+ before exiting, even if there are errors.
 trap clean EXIT
 
-# Create temporal directory
+title "Create temporal directory"
 mkdir -p "{{ backups_role_tmp_path }}"
+echo "…done"
 
 # Execute scripts in chain if error code is ok
-{{ backups_role_script_prepare }} && {{ backups_role_script_upload }}
+{# Append and render script template to prepare backup #}
+{% include backups_role_script_prepare_template %}
+
+{# Append and render script template to upload backup #}
+{% include "cron-upload.sh.j2" %}
