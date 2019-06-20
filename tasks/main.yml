@@ -49,7 +49,7 @@
   become: true
   become_user: "{{ postgresql_user }}"
   with_items: "{{ backups_role_db_names }}"
-  when: backups_role_postgresql_enabled
+  when: _backups_role_postgresql_enabled
 
 - name: Ensure postgresql "role" for backups has "select" access to any table in {{ backups_role_db_names }}
   postgresql_privs:
@@ -61,7 +61,7 @@
   become: true
   become_user: "{{ postgresql_user }}"
   with_items: "{{ backups_role_db_names }}"
-  when: backups_role_postgresql_enabled
+  when: _backups_role_postgresql_enabled
 
 - name: Ensure postgresql "role" for backups has no other access to any table in {{ backups_role_db_names }}
   postgresql_privs:
@@ -75,7 +75,7 @@
   become: true
   become_user: "{{ postgresql_user }}"
   with_items: "{{ backups_role_db_names }}"
-  when: backups_role_postgresql_enabled
+  when: _backups_role_postgresql_enabled
 
 - name: Let backup user to use `{{ backups_role_sudoers_cmd_pattern }}` as root
   template:
@@ -83,7 +83,7 @@
     dest: "/etc/sudoers.d/90-backup-user"
     mode: 0440
     group: "root"
-  when: backups_role_sudoers_enabled
+  when: _backups_role_sudoers_enabled
 
 - name: Install restic and configure restic repository
   include_role:
