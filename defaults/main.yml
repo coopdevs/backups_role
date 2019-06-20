@@ -17,6 +17,7 @@ backups_role_user_name: 'backups'
 backups_role_user_group: 'backups'
 # Secondary groups to grant user additional permissions
 backups_role_user_groups: ''
+backups_role_sudoers_enabled: true
 backups_role_sudoers_cmd_pattern: '/bin/tar -czvf *'
 
 # Log files of the backup scripts run by cron
@@ -24,6 +25,7 @@ backups_role_cron_stdout_file: '/var/log/cron.d/restic-stdout.log'
 backups_role_cron_stderr_file: '/var/log/cron.d/restic-stderr.log'
 
 # read only user
+backups_role_postgresql_enabled: true
 backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
 # manager user
 postgresql_user: "postgres"
