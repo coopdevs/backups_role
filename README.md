@@ -48,7 +48,7 @@ backups_role_db_names: [ "postgres" ]
 
 # Restic repository name used only in case
 #+ we need to address different restic repos
-backups_role_restic_repo_name: {{ inventory_hostname }}
+backups_role_restic_repo_name: {{ escaped_inventory_hostname }}
 
 #########################################
 ### WARNING! Sensible variables below ###

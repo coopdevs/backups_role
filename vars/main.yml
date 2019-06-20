@@ -14,3 +14,5 @@ backups_role_restic_repo:
       at: "{{ backups_role_cron_job_at }}"
       user: "{{ backups_role_user_name }}"
   check: false
+
+escaped_inventory_hostname: "{{ inventory_hostname | replace('.', '_') }}"
