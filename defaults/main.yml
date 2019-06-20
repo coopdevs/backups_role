@@ -2,6 +2,8 @@
 backups_role_restic_version: '0.9.3'
 backups_role_path: '/opt/backup'
 backups_role_script_dir: "{{ backups_role_path }}/bin"
+backups_role_script_path: "{{ backups_role_script_dir }}/backup.sh"
+backups_role_script_prepare_template: "cron-prepare.sh.j2"
 backups_role_tmp_path: "{{ backups_role_path }}/.tmp"
 backups_role_restore_path: "{{ backups_role_path }}/restore"
 backups_role_config_paths:
@@ -17,7 +19,6 @@ backups_role_user_name: 'backups'
 backups_role_user_group: 'backups'
 # Secondary groups to grant user additional permissions
 backups_role_user_groups: ''
-backups_role_sudoers_enabled: true
 backups_role_sudoers_cmd_pattern: '/bin/tar -czvf *'
 
 # Log files of the backup scripts run by cron
@@ -25,7 +26,6 @@ backups_role_cron_stdout_file: '/var/log/cron.d/restic-stdout.log'
 backups_role_cron_stderr_file: '/var/log/cron.d/restic-stderr.log'
 
 # read only user
-backups_role_postgresql_enabled: true
 backups_role_postgresql_user_name: "{{ backups_role_user_name }}"
 # manager user
 postgresql_user: "postgres"
@@ -34,12 +34,6 @@ backups_role_db_names: [ "{{ backups_role_db_name }}" ]
 
 # Fix to use python3 with ansible's postgresql module
 postgresql_python_library: "python3-psycopg2"
-
-
-# Backup scripts
-
-backups_role_script_prepare_template: "cron-prepare.sh.j2"
-backups_role_script_path: "{{ backups_role_script_dir }}/backup.sh"
 
 # Restic forget policy:
 # How many snapshots do we want to keep?

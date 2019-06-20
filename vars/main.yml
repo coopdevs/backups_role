@@ -1,5 +1,13 @@
 ---
 # vars file for backups_role
+
+# Check if cron script template of prepare backup, is the default one (true) or has been overriden (false)
+_template_is_default: {% backups_role_script_prepare_template == "cron-prepare.sh.j2" %}
+# If swithces have been set at the inventory, respect them.
+# Otherwise, switch them off when the template has changed.
+backups_role_sudoers_enabled: {{ backups_role_sudoers_enabled | default(_template_is_default) }}
+backups_role_postgresql_enabled: {{ backups_role_postgresql_enabled | default(_template_is_default) }}
+
 backups_role_restic_repo:
   name: "{{ backups_role_restic_repo_name }}"
   url: "{{ backups_role_restic_repo_url }}"
