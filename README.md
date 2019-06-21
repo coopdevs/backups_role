@@ -24,7 +24,7 @@ backups_role_script_dir: "{{ backups_role_path }}/bin"
 backups_role_script_prepare_template: "cron-prepare.sh.j2"
 
 # If you modify backups_role_script_prepare_template , then it means that you are not using
-#+ this script template and therefore we don't need to create postgres roles, etc.
+#+ the default script template and therefore we don't need to create postgres roles, etc.
 #+ and you may not need sudoer permissions for tar. Therefore, we disable
 #+ the related tasks by default. However, if you would like to enable those tasks,
 #+ set to true the corresponding variables:
