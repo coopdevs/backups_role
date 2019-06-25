@@ -113,7 +113,7 @@ You will need to prepare an inventory for your hosts with the variables above. F
   hosts: servers
   connection: local
   tasks:
-  - import_role:
+  - include_role:
       name: coopdevs.backups_role
       tasks_from: restore-to-controller.yml
 ```
@@ -125,7 +125,7 @@ You will need to prepare an inventory for your hosts with the variables above. F
 - name: Restore backup to the host
   hosts: servers
   tasks:
-  - import_role:
+  - include_role:
       name: coopdevs.backups_role
       tasks_from: restore-to-host.yml
 ```
