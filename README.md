@@ -77,7 +77,9 @@ backups_role_restic_repo_password:
 # Example for local repo: "/var/backups/repo"
 backups_role_restic_repo_url:
 
-# Backblaze "application" or bucket credentials
+# Backblaze "application" key, restricted to the bucket referenced above
+# More on this at the example secrets file and
+# at https://gitlab.com/coopdevs/b2-bucket-and-key
 backups_role_b2_app_key_id:
 backups_role_b2_app_key:
 ```
@@ -154,14 +156,15 @@ Please protect at least the variables below the "sensible variables" above. To d
 
 Backblaze
 ---------
-Backblaze provides two kind of keys: account or master, and application. There's only one account key and has power over all the buckets. We can have many app keys, that can have rw access to any, one or more buckets.
+Backblaze provides two kind of keys: account or master, and application. There's only one account key and has power over all other keys and all the buckets. We can have many app keys, that can have rw access to either all or exactly one bucket.
 
-We should not use account key or reuse application keys. Even if restic passwords are different and buckets are different, one server could be able to delete backups of others, or even create more buckets and feed the bill.
+We should not use the account key to access a bucket or reuse application keys. Even if restic passwords are different, and buckets are different, one server could be able to delete backups of others, or even create more buckets, fill them, and feed the bill.
 
-Therefore, we use app keys instead of account key. As per, `ansible-restic`, it just gives the credentials to restic, regardless of the type of key. This is why we can set `ansible-restic`'s `b2_account_key` with `backup-role`'s `backups_role_b2_app_key`.
+Therefore, we use app keys instead of the master key. As per `ansible-restic`, it just passes the credentials to restic, regardless of the type of key. Actually, we set `ansible-restic`'s `b2_account_key` (suggests using the master key) with `backup-role`'s `backups_role_b2_app_key` (suggests using an app key).
 
 What restic calls "Account key" appears at B2 web as "Master application key".
 
+If you want to create a new bucket and a restricted app key, you can use the [Backblaze bucket and key](https://gitlab.com/coopdevs/b2-bucket-and-key) script.
 
 Restic
 ------
