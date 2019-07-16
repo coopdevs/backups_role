@@ -15,3 +15,4 @@
   command: "restic-{{ backups_role_restic_repo_name }} restore latest --target {{ backups_role_restore_path }}"
   become: yes
   become_user: "{{ backups_role_user_name }}"
+  changed_when: yes

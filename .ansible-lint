@@ -1,0 +1,3 @@
+# Skip some picky ansible lint warnings
+skip_list:
+  - '602' # Don’t compare to empty string
