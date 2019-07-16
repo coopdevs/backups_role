@@ -14,10 +14,11 @@ install:
   - sudo apt-get install yamllint
 
   # Add ansible.cfg to pick up roles path.
-  - printf '[defaults]\nroles_path=../' >ansible.cfg
+  - printf '[defaults]\nroles_path=tests/vendor/' >ansible.cfg
 
 script:
   # Check the role/playbook's syntax.
+  - ansible-galaxy install paulfantom.restic
   - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
   - ansible-lint .
   - yamllint -c .yamllint.yaml .
