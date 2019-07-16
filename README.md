@@ -1,4 +1,4 @@
-backups_role
+Backups role
 =========
 
 Backup and restore strategies for Coopdevs projects.
