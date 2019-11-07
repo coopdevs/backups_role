@@ -40,3 +40,8 @@ echo "…done"
 
 {# Append and render script template to upload backup #}
 {% include "cron-upload.sh.j2" %}
+
+{% if backups_role_restic_exporter_enabled %}
+# Run stats exporter script
+exec "{{ backups_role_restic_exporter_script_path }}" "{{ backups_role_restic_exporter_text_path }}"
+{% fi}

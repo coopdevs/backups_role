@@ -36,6 +36,14 @@
     group: "{{ backups_role_user_group }}"
     mode: 0775
 
+- name: Install restic exporter script
+  template:
+    src: "restic_exporter.py.j2"
+    dest: "{{ backups_role_restic_exporter_script_path }}"
+    owner: "{{ backups_role_user_name }}"
+    group: "{{ backups_role_user_group }}"
+    mode: 0775
+
 - name: Ensure postgresql "role" for backups exists with limited access to db
   postgresql_user:
     db: "{{ item }}"

@@ -35,6 +35,12 @@ backups_role_db_names: [ "{{ backups_role_db_name }}" ]
 # Fix to use python3 with ansible's postgresql module
 postgresql_python_library: "python3-psycopg2"
 
+# Restic backups status prometheus exporter
+backups_role_restic_exporter_enabled: false
+backups_role_restic_exporter_script_name: "{{ backups_role_script_dir }}/restic_exporter.py"
+backups_role_restic_exporter_script_path: "{{ backups_role_script_dir }}/{{ backups_role_restic_exporter_script_name }}"
+backups_role_restic_exporter_text_path: "/var/log/cron.d/restic_exporter_metrics.txt"
+
 # Restic forget policy:
 # How many snapshots do we want to keep?
 #
