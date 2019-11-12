@@ -1,0 +1,3 @@
+# HELP backups_latest Details about latest snapshot
+# TYPE backups_latest gauge
+backups_latest{short_id="9c860da9", paths_saved="['/opt/backup/.tmp/pg_dump_opencell.sql', '/opt/backup/.tmp/pg_dump_keycloak.sql', '/home/opencell/input-files/opencell-version.txt']", restore_size="1389273071", } 1.0
