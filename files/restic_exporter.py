@@ -4,8 +4,6 @@
 import subprocess
 # To decode restic output
 import json
-# To generate prometheus file
-#from prometheus_client import Info, Gauge, write_to_textfile, CollectorRegistry, start_http_server
 # to get env vars
 import os
 # to parse time
@@ -65,7 +63,6 @@ json2 = """
 }
 
 """
-
 
 """
 command: restic stats --mode raw-data --json
@@ -158,18 +155,6 @@ def main():
     #restic_overview = run_cmd(restic_helper + ' stats --mode raw-data --json')
     restic_overview = json.loads(json3)
 
-    # Use the data to generate prometheus-compatible file
-    # from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
-
-#   registry = CollectorRegistry()
-#   g = Gauge('raid_status', '1 if raid array is okay', registry=registry)
-#   g.set(1)
-#   write_to_textfile('/configured/textfile/path/raid.prom', registry)
-
-    #
-
-    # Info for last backup
-    #prom_reg = CollectorRegistry()
 
     """
     prom_latest_info = Info('backups_latest', 'Details about latest snapshot', registry=prom_reg)
@@ -202,18 +187,6 @@ def main():
     )
     fd = open("proves.pom","w")
     print(prom_latest_info.to_str(), file=fd)
-
-"""
-    "time": "2019-10-20T03:45:31.594690521+02:00",
-    "paths": [
-      "/opt/backup/.tmp/pg_dump_opencell.sql",
-      "/opt/backup/.tmp/pg_dump_keycloak.sql",
-      "/home/opencell/input-files/opencell-version.txt"
-    ],
-    "hostname": "stagingopencell.coopdevs.org",
-    "short_id": "9c860da9"
-
-"""
 
 
 if __name__ == "__main__":
