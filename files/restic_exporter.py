@@ -93,11 +93,26 @@ def str_to_isoformat(s):
     return regex.sub("\g<1>\g<2>", s)
 
 
-class PrometheusEntry(object):
-    def __init__(self, name, _type, description, labels, value, timestamp):
+class PrometheusMetric(object):
+    def __init__(self, name, _type, description="", entries=[]):
         self.name = name
         self.type = _type
         self.description = description
+        self.entries = entries
+
+    def to_str(self):
+        result = '# HELP {} {}\n'.format(self.name, self.description)
+        result = result + '# TYPE {} {}\n'.format(self.name, self.type)
+        for entry in self.entries:
+            result = result + entry.to_str() + '\n'
+        return result
+
+    def add_entry(self, labels, value, timestamp):
+        raise NotImplementedError("Use GaugeMetric, InfoMetric or implement your subclass instead")
+
+class PrometheusEntry(object):
+    def __init__(self, name, labels=None, value=1.0, timestamp=None):
+        self.name = name
         self.labels = labels
         self.value = value
         self.timestamp = timestamp
@@ -105,10 +120,7 @@ class PrometheusEntry(object):
     def to_str(self):
         raise NotImplementedError("Use GaugeEntry, InfoEntry or implement your subclass instead")
 
-
 class GaugeEntry(PrometheusEntry):
-    def __init__(self, name, description, labels, value, timestamp):
-        super().__init__(name, "gauge", description, labels, value, timestamp)
 
     def to_str(self):
 
@@ -129,16 +141,28 @@ class GaugeEntry(PrometheusEntry):
         if (self.timestamp):
             line = line + " " + self.timestamp.toisoformat()
 
-        result = '# HELP {} {}\n'.format(self.name, self.description)
-        result = result + '# TYPE {} {}\n'.format(self.name, self.type)
-        result = result + line
+        return line
 
-        return result
+
+class GaugeMetric(PrometheusMetric):
+    def __init__(self, name, description="", timestamp=None):
+        super().__init__(name, "gauge", description, timestamp)
+
+    def add_entry(self, labels, value, timestamp):
+        self.entries.append(GaugeEntry(self.name, labels, value, timestamp))
 
 
 class InfoEntry(GaugeEntry):
-    def __init__(self, name, description, labels):
-        super().__init__(name, description, labels, 1.0, None)
+    def __init__(self, name, labels):
+        super().__init__(name, labels=labels, value=1.0, timestamp=None)
+
+
+class InfoMetric(PrometheusMetric):
+    def __init__(self, name, description=""):
+        super().__init__(name, "gauge", description)
+
+    def add_entry(self, labels):
+        self.entries.append(InfoEntry(self.name, labels))
 
 
 def main():
@@ -176,15 +200,14 @@ def main():
     #write_to_textfile('example.prom', prom_reg)
 #    start_http_server(8030, registry=prom_reg)
  #   time.sleep(10)
-    prom_latest_info = InfoEntry(
-        'backups_latest',
-        'Details about latest snapshot',
-        {
-            'short_id': str(restic_latest_info['short_id']),
-            'paths_saved': str(restic_latest_info['paths']),
-            'restore_size': str(restic_latest_size['total_size']),
-        }
+    prom_latest_info = InfoMetric(
+        name='backups_latest',
+        description='Details about latest snapshot',
     )
+    prom_latest_info.add_entry(labels = {'short_id': str(restic_latest_info['short_id'])})
+    prom_latest_info.add_entry(labels = {'paths_saved': str(restic_latest_info['paths'])})
+    prom_latest_info.add_entry(labels = {'restore_size': str(restic_latest_size['total_size'])})
+
     fd = open("proves.pom","w")
     print(prom_latest_info.to_str(), file=fd)
 
