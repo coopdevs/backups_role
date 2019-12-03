@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.2.3] - 2019-12-03
+
 ### Removed
 
 - `backups_role_config_paths` as we don't see the point on backing up anything
