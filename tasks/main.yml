@@ -51,30 +51,11 @@
   with_items: "{{ backups_role_db_names }}"
   when: _backups_role_postgresql_enabled
 
-- name: Ensure postgresql "role" for backups has "select" access to any table in {{ backups_role_db_names }}
-  postgresql_privs:
-    db: "{{ item }}"
-    role: "{{ backups_role_postgresql_user_name }}"
-    objs: ALL_IN_SCHEMA
-    # This ensures that this priv exists: {{ role }}=r/{{ become_user }}
-    privs: SELECT
-  become: true
-  become_user: "{{ postgresql_user }}"
-  with_items: "{{ backups_role_db_names }}"
-  when: _backups_role_postgresql_enabled
-
-- name: Ensure postgresql "role" for backups has no other access to any table in {{ backups_role_db_names }}
-  postgresql_privs:
-    db: "{{ item }}"
-    role: "{{ backups_role_postgresql_user_name }}"
-    objs: ALL_IN_SCHEMA
-    # Revoke all privs except SELECT
-    # https://www.postgresql.org/docs/current/sql-grant.html
-    privs: "INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER"
-    state: absent
-  become: true
-  become_user: "{{ postgresql_user }}"
-  with_items: "{{ backups_role_db_names }}"
+- name: Include taskfile for postgresql privileges
+  include_tasks: postgresql_privs.yml
+  loop: "{{ backups_role_db_names }}"
+  loop_control:
+    loop_var: _db_name
   when: _backups_role_postgresql_enabled
 
 - name: Let backup user to use `{{ backups_role_sudoers_cmd_pattern }}` as root
