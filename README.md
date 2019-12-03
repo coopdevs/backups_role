@@ -38,7 +38,6 @@ backups_role_script_path:    "{{ backups_role_script_dir }}/backup.sh"
 backups_role_tmp_path: '/tmp/backups'
 
 # Lists of paths to backup
-backups_role_config_paths: ['/etc', '/root', '/usr/local/etc']
 backups_role_assets_paths: []
 
 # System user, its primary group, and additional ones.

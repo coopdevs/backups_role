@@ -6,10 +6,6 @@ backups_role_script_path: "{{ backups_role_script_dir }}/backup.sh"
 backups_role_script_prepare_template: "cron-prepare.sh.j2"
 backups_role_tmp_path: "{{ backups_role_path }}/.tmp"
 backups_role_restore_path: "{{ backups_role_path }}/restore"
-backups_role_config_paths:
-    - '/etc'
-    - '/root'
-    - '/usr/local/etc'
 backups_role_assets_paths: []
 backups_role_cron_job_at: '45 03 * * *'
 

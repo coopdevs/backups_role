@@ -22,10 +22,6 @@ for DB in "{{ backups_role_db_names | join('" "')  }}"; do
 done
 echo "…done"
 
-title "Compress configuration files"
-sudo tar -czvf {{ backups_role_tmp_path }}/config.tar.gz {{ backups_role_config_paths|join(' ') }}
-echo "…done"
-
 title "Compress assets data"
 sudo tar -czvf {{ backups_role_tmp_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}
 echo "…done"
