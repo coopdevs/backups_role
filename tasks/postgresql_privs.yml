@@ -1,0 +1,31 @@
+---
+# This tasklist is meant to be run from an outer loop,
+# iterating over a list of databases. Main loop in main.yml
+
+- name: "Grant SELECT priv on existing sequences and tables to {{ backups_role_postgresql_user_name }}"
+  postgresql_privs:
+    db: "{{ _db_name }}"  # loop_var from outer loop
+    role: "{{ backups_role_postgresql_user_name }}"
+    objs: ALL_IN_SCHEMA
+    # This ensures that this priv exists: {{ role }}=r/{{ become_user }}
+    privs: SELECT
+    type: "{{ item }}"
+  become: true
+  become_user: "{{ postgresql_user }}"
+  with_items:
+    - table
+    - sequence
+
+- name: "Alter default privs on sequences and tables to {{ backups_role_postgresql_user_name }}"
+  postgresql_privs:
+    db: "{{ _db_name }}"  # loop_var from outer loop
+    role: "{{ backups_role_postgresql_user_name }}"
+    objs: "{{ item }}"
+    # This ensures that this priv will exist in future objects: {{ role }}=r/{{ become_user }}
+    privs: SELECT
+    type: default_privs
+  become: true
+  become_user: "{{ postgresql_user }}"
+  with_items:
+    - "TABLES"
+    - "SEQUENCES"
