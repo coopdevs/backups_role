@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.2.4] - 2019-12-03
+
 ### Fixed
 
 - Do not backup non-existing `config.tar.gz` with the restic command [#36](https://github.com/coopdevs/backups_role/pull/36)
