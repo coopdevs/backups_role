@@ -5,7 +5,6 @@ restic backup \
   {% for db in backups_role_db_names %}
   "{{ backups_role_tmp_path }}/pg_dump_{{ db }}" \
   {% endfor %}
-  "{{ backups_role_tmp_path }}/config.tar.gz" \
   {% endif %}
   {{ backups_role_assets_paths|join(' ') }}
 
