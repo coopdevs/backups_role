@@ -1,6 +1,7 @@
 {# This template is included by cron-main.sh.j2 #}
-title "Restic backup"
-restic backup \
+
+log "Restic backup"
+run restic backup \
   {% if backups_role_script_prepare_template == "cron-prepare.sh.j2" %}
   {% for db in backups_role_db_names %}
   "{{ backups_role_tmp_path }}/pg_dump_{{ db }}" \
@@ -8,10 +9,8 @@ restic backup \
   {% endif %}
   {{ backups_role_assets_paths|join(' ') }}
 
-echo "…done"
-
-title "Restic forget"
-restic forget \
+log "Restic forget"
+run restic forget \
   --keep-last    {{ backups_role_keep_last }} \
   --keep-hourly  {{ backups_role_keep_hourly }} \
   --keep-daily   {{ backups_role_keep_daily }} \
@@ -19,8 +18,6 @@ restic forget \
   --keep-monthly {{ backups_role_keep_monthly }} \
   --keep-yearly  {{ backups_role_keep_yearly }} \
   --prune
-echo "…done"
 
-title "Restic check"
-restic check
-echo "…done"
+log "Restic check"
+run restic check
