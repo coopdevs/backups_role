@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Print promtail-friendly logs. See #37
+- Print promtail-friendly logs. See [#37](https://github.com/coopdevs/backups_role/pull/37)
 
 ## [v1.2.4] - 2019-12-03
 
