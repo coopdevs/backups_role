@@ -1,5 +1,6 @@
 {# This template is included by cron-main.sh.j2 #}
 
+{% if backups_role_db_names %}
 log "Postgres DB dump"
 {# jinja comment.
  Next non-comment line below should render to something like:
@@ -15,7 +16,9 @@ log "Postgres DB dump"
 for DB in "{{ backups_role_db_names | join('" "')  }}"; do
   run /usr/bin/pg_dump --encoding=UTF8 "$DB" > "{{ backups_role_tmp_path }}/pg_dump_$DB"
 done
+{% endif %}
 
+{% if backups_role_assets_paths %}
 # This command below is meant to be executed by a very limited sudoer user.
 # It must be allowed to only execute `tar -czvf *` as root,
 # meaning that it can't uncompress, add options, or even change the options order.
@@ -23,3 +26,4 @@ done
 
 log "Compress assets data"
 run sudo tar -czvf {{ backups_role_tmp_path }}/assets.tar.gz {{ backups_role_assets_paths|join(' ') }}
+{% endif %}
