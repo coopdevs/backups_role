@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Changed
-- Fix: when using default backups-prepare script, manage the case when no assets_paths are defined
+
+## [v1.2.6] - 2020-01-23
+### Fixed
+- When using default backups-prepare script, manage the case when no assets_paths are defined.
+  See [#38](https://github.com/coopdevs/backups_role/pull/38)
 
 ## [v1.2.5] - 2020-01-20
 ### Changed
