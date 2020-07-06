@@ -68,11 +68,12 @@ backups_role_restic_repo_name: {{ escaped_inventory_hostname }}
 # Password for postgresql unprivileged backups user
 backups_role_postgresql_user_password:
 
-# Restic repository password
+# Restic repository password. A new password you provide to encrypt the backups.
 backups_role_restic_repo_password:
 
 # Remote bucket URL in restic format
-# Example for backblaze:  "b2:bucketname:path/to/repo"
+# Example for backblaze:  "b2:bucketname:path/to/repo". Chances are that
+#   "b2:bucketname:/" will work for you.
 # Example for local repo: "/var/backups/repo"
 backups_role_restic_repo_url:
 
@@ -146,6 +147,16 @@ By default, it creates a directory with restic and a handy wrapper and a restore
 ```shell
 ansible-playbook playbooks/restore.yml -i inventory/hosts -l servers --tags install
 ```
+
+### Custom backup script
+
+When your app doesn't use PostgreSQL or the backup script doesn't fit your needs, you can provide yours by passing a new template to `backups_role_script_prepare_template`. You can use the same helper methods `log` and `run` specified in [cron-main.sh.j2](https://github.com/coopdevs/backups_role/blob/master/templates/cron-main.sh.j2). You can refer to any vars you may have specified in the `include_role` declaration.
+
+The upload of the backup to the object storage can't be customized and so you still need to specify the paths where your script leaves the backup files with `backups_role_assets_paths`. Yes, that var should be named something like `backups_role_file_to_upload` or similar :shrug:. See [cron-upload.sh.j2](https://github.com/coopdevs/backups_role/blob/master/templates/cron-upload.sh.j2) for details.
+
+Note that although it doesn't apply in this case, this var also used in [cron-prepare.sh](https://github.com/coopdevs/backups_role/blob/master/templates/cron-prepare.sh.j2) to list the files to backup and this can be very confusing. It has two different usages.
+
+See https://github.com/coopdevs/donalo/pull/82 or https://gitlab.com/coopdevs/odoo-provisioning/-/tree/master/roles/backups for production-ready examples.
 
 
 Sensible variables
