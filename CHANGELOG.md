@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Ensure the backups user has USAGE privilage on the database's schema. We assume it to be`public` #41.
+
 ## [v1.2.6] - 2020-01-23
 ### Fixed
 - When using default backups-prepare script, manage the case when no assets_paths are defined.
