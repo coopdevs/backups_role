@@ -51,6 +51,17 @@
   with_items: "{{ backups_role_db_names }}"
   when: _backups_role_postgresql_enabled
 
+- name: Grant USAGE priv on public schema
+  postgresql_privs:
+    db: "{{ backups_role_db_names[0] }}"
+    role: "{{ backups_role_postgresql_user_name }}"
+    privs: USAGE
+    type: schema
+    objs: public
+  become: true
+  become_user: "{{ postgresql_user }}"
+  when: _backups_role_postgresql_enabled
+
 - name: Include taskfile for postgresql privileges
   include_tasks: postgresql_privs.yml
   loop: "{{ backups_role_db_names }}"
