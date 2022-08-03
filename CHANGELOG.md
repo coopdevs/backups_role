@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
+## [v1.2.7] - 2022-08-03
 ### Fixed
+- Activated restic exporter and exposed with Prometheus format
+  See [#42](https://github.com/coopdevs/backups_role/pull/42)
 - Ensure the backups user has USAGE privilage on the database's schema. We assume it to be`public` #41.
+
 
 ## [v1.2.6] - 2020-01-23
 ### Fixed
