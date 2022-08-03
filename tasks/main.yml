@@ -88,3 +88,25 @@
     restic_cron_stderr_file: "{{ backups_role_cron_stderr_file }}"
     restic_repos:
     - "{{ backups_role_restic_repo }}"
+
+
+- name: Working directory
+  file:
+    state: directory
+    path: "/home/{{ backups_role_user_name }}"
+    owner: "{{ backups_role_user_name }}"
+
+- name: Render template for the docker-compose file.
+  template:
+    src: backup-docker-compose.yml.j2
+    dest: "/home/{{ backups_role_user_name }}/docker-compose.yml"
+    owner: "{{ backups_role_user_name }}"
+
+
+- name: Bring up the containers
+  command: docker-compose up -d # noqa: 304
+  become: true
+  become_user: "{{ backups_role_user_name }}"
+  args:
+    chdir: "/home/{{ backups_role_user_name }}"
+  changed_when: false
