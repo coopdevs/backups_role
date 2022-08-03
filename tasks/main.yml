@@ -90,6 +90,29 @@
     - "{{ backups_role_restic_repo }}"
 
 
+# Adding this user to docker group can have security issues when docker
+# manages other containers too, but it's better than running docker from root.
+- name: User to execute the manage docker on behalf of monitoring
+  become: true
+  user:
+    name: "{{ backups_role_user_name }}"
+    state: present
+    shell: /bin/bash
+    home: "/home/{{ backups_role_user_name }}"
+
+- name: Install docker
+  include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_users:
+      - "{{ backups_role_user_name }}"
+
+- name: Working directory
+  file:
+    state: directory
+    path: "/home/{{ backups_role_user_name }}"
+    owner: "{{ backups_role_user_name }}"
+
 - name: Working directory
   file:
     state: directory
