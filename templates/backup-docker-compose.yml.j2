@@ -1,0 +1,15 @@
+version: "3.1"
+services:
+{% if monitoring_backup_exporter_enabled %}
+  backup_exporter:
+    image: coopdevstreball/restic-exporter:{{ monitoring_backup_exporter_image_version }}
+    container_name: {{ monitoring_backup_exporter_container_name }}
+    environment:
+      RESTIC_REPOSITORY: "{{ backups_role_restic_repo_url }}"
+      RESTIC_PASSWORD: "{{ backups_role_restic_repo_password }}"
+      B2_ACCOUNT_ID: "{{ backups_role_b2_app_key_id }}"
+      B2_ACCOUNT_KEY: "{{ backups_role_b2_app_key }}"
+    restart: always
+    ports:
+      - {{ monitoring_backup_exporter_docker_bind }}
+{% endif %}
