@@ -6,7 +6,7 @@ Backup and restore strategies for Coopdevs projects.
 Requirements
 ------------
 
-This role uses [Restic](https://restic.net) with the help of [restic-ansible](https://github.com/paulfantom/ansible-restic)
+This role uses [Restic](https://restic.net) with the help of [restic-ansible](https://github.com/coopdevs/restic-role)
 
 Role Variables
 --------------
@@ -88,7 +88,7 @@ backups_role_b2_app_key:
 Dependencies
 ------------
 
-* [paulfantom.restic](https://galaxy.ansible.com/paulfantom/restic)
+* [coopdevs.ansible_restic](https://github.com/coopdevs/restic-role)
 
 Usage
 -----
