@@ -12,7 +12,7 @@ Role Variables
 --------------
 ```yaml
 # Restic version
-backups_role_restic_version: '0.9.3'
+backups_role_restic_version: '0.16.4'
 
 # Location of the scripts
 backups_role_path: '/opt/backup'
