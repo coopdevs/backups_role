@@ -23,6 +23,7 @@ galaxy_info:
 
 dependencies:
   - name: coopdevs.ansible_restic
+    version: v1.0.0
     # We don't want the role to run
     # when we import tasks from restore-to-controller,
     # as it is executed locally to the controller machine
