@@ -49,7 +49,7 @@
 
   - name: Render script template that wraps restic with credentials
     template:
-      src: '../vendor/coopdevs.ansible_restic/templates/restic.helper.j2'
+      src: 'coopdevs.ansible_restic/templates/restic.helper.j2'
       dest: "{{ work_path }}/restic-{{ backups_role_restic_repo_name }}"
       mode: '0750'
     no_log: true
