@@ -5,7 +5,7 @@ galaxy_info:
 
   license: GPLv3
 
-  min_ansible_version: 2.4
+  min_ansible_version: "2.4"
 
   #
   # Provide a list of supported platforms, and for each platform a list of versions.
@@ -22,8 +22,8 @@ galaxy_info:
      - backups
 
 dependencies:
-  - name: coopdevs.ansible_restic
-    version: v1.0.0
+  - name: coopdevs.restic-role
+    version: v1.0.1
     # We don't want the role to run
     # when we import tasks from restore-to-controller,
     # as it is executed locally to the controller machine

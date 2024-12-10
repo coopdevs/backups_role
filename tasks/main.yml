@@ -79,7 +79,7 @@
 
 - name: Install restic and configure restic repository
   include_role:
-    name: vendor/coopdevs.ansible_restic
+    name: vendor/coopdevs.restic-role
   vars:
     restic_version: "{{ backups_role_restic_version }}"
     restic_user: "{{ backups_role_user_name }}"
