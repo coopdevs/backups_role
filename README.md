@@ -88,7 +88,7 @@ backups_role_b2_app_key:
 Dependencies
 ------------
 
-* [coopdevs.ansible_restic](https://github.com/coopdevs/restic-role)
+* [coopdevs.restic-role](https://github.com/coopdevs/restic-role)
 
 Usage
 -----
