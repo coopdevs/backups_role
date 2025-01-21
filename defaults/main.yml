@@ -72,4 +72,4 @@ monitoring_backup_exporter_host: 127.0.0.1
 monitoring_backup_exporter_port: 11800
 monitoring_backup_exporter_docker_bind: "{{ monitoring_backup_exporter_host }}:{{ monitoring_backup_exporter_port }}:{{ monitoring_backup_exporter_port }}"
 monitoring_backup_exporter_container_name: backup_exporter
-monitoring_backup_exporter_image_version: 1.0.0
+monitoring_backup_exporter_image_version: 1.0.4
